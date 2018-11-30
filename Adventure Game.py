@@ -2,12 +2,7 @@
 # University of Utah, David Johnson, 2017.
 # This code, or code derived from this code, may not be shared without permission.
 
-
-
-
-#CHANGE
-#CHANGE 2
-
+# Changes date: 11/30/18 2:00pm
 
 import sys, pygame, math
 
@@ -100,6 +95,10 @@ def main():
     quest_02_rect = quest_02.get_rect()
     quest_02_rect.center = 400, 200
 
+    button = pygame.image.load("button.png").convert_alpha()
+    button_rect = button.get_rect()
+    button_rect.center = 400, 200
+
     # The clock helps us manage the frames per second of the animation
     clock = pygame.time.Clock()
 
@@ -128,14 +127,19 @@ def main():
     inventory = {}
 
     # This list should hold all the sprite rectangles that get shifted with a key press.
-    rect_list = [monster_rect, key_rect, sword_rect, chest_rect, merchant_rect, door_rect, beast_rect, axe_rect, door_02_rect, mystical_god_rect, boss_rect, creature_rect, quest_01_rect, quest_02_rect]
+    rect_list = [monster_rect, key_rect, sword_rect, chest_rect, merchant_rect, door_rect, beast_rect, axe_rect, door_02_rect, mystical_god_rect, boss_rect, creature_rect, quest_01_rect, quest_02_rect, button_rect]
 
     level_3 = False
     level_2 = False
     show_beast = False
-    level_1_over = False
     quest1 = False
     quest2 = False
+
+    #Level 1 variables:
+    level_1_over = False
+    necklace = False
+    fuckyou = False
+
     # Loop while the player is still active
     while playing:
         # start the next frame
@@ -213,8 +217,27 @@ def main():
 
 # 1st level stuff
         if level_1_over == False:
+
+            #Mystical God appears
             screen.blit(mystical_god, mystical_god_rect)
-            screen.blit(door, door_rect)
+
+            if hero_rect.colliderect(mystical_god_rect):
+                necklace = True
+                dialog = "Now you may travel through the portal"
+                dialog_counter = 30
+
+            if necklace == True:
+                screen.blit(button, button_rect)
+
+            if hero_rect.colliderect(button_rect):
+                inventory["necklace"] = True
+                dialog = "You picked up the magic necklace!"
+                dialog_counter = 30
+                necklace = False
+                fuckyou = True
+
+            if fuckyou == True:
+                screen.blit(door, door_rect)
 
 # Add 2nd level stuff
         if hero_rect.colliderect(door_rect):
